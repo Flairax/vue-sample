@@ -1,7 +1,9 @@
 import { environment } from '../..'
-import { AHttpRequest } from '../request.http'
+import { type TRequestIntercepter } from '../request.http'
 
-AHttpRequest.addIntercepter((request, next) => {
-  request.url.unshift(environment.api)
+
+export const apiIntercepter: TRequestIntercepter = (request, next) => {
+  // request.url.unshift(environment.api)
   return next(request)
-});
+}
+

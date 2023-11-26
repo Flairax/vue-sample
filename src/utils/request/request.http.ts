@@ -1,5 +1,8 @@
 import { ZodType } from 'zod'
 import { ARequest } from './request.core'
+import { apiIntercepter } from './intercepters/api.intercepter'
+import { contentTypeIntercepter } from './intercepters/contentType.intercepter'
+import { intercepters } from './intercepters'
 
 // ====================================
 //              Model
@@ -30,10 +33,13 @@ export abstract class AHttpRequest<I, O> extends ARequest<I, O> {
   // ------------------------------------
   //            Internal
   // ------------------------------------
-  protected async createFetchRequest(request: IRequestCtx<O>) {
-    const irs = AHttpRequest.intercepters
-    if (!irs.length) return Promise.resolve({ status: 199 })
+  protected async createFetchRequest(request: IRequestCtx<O>): Promise<O> {
+    const irs = intercepters
+    // const irs = AHttpRequest.intercepters
+    if (!irs.length) return this.sendRequest(request);
 
+    console.log(request);
+    
     let resolve: (value: unknown) => void
     let reject: (error: unknown) => void
     const resolvePromise = new Promise<unknown>((res, rej) => {
@@ -58,7 +64,7 @@ export abstract class AHttpRequest<I, O> extends ARequest<I, O> {
         .then(resolve)
         .catch(reject)
       return mappedPromise
-    })
+    }) as Promise<O>
   }
 
   protected override processError(error: unknown): string {
@@ -66,13 +72,16 @@ export abstract class AHttpRequest<I, O> extends ARequest<I, O> {
   }
 
   private async sendRequest(request: IRequestCtx<O>) {
-    const params = this.getParamsString(request)
-    const url = request.url + params
+    const url = request.url + this.getParamsString(request)
+    console.log(request, intercepters);
+
     const response = await fetch(url, {
       method: request.method,
       body: request.body ? JSON.stringify(request.body) : undefined,
       headers: request.headers
     })
+
+    
 
     if (response.ok) {
       const json = await response.json()
@@ -110,9 +119,12 @@ export abstract class AHttpRequest<I, O> extends ARequest<I, O> {
   // ------------------------------------
   //              Static
   // ------------------------------------
-  private static intercepters: TRequestIntercepter[] = []
+  // private static intercepters: TRequestIntercepter[] = [
+  //   apiIntercepter,
+  //   contentTypeIntercepter
+  // ]
 
-  static addIntercepter(intercepter: TRequestIntercepter) {
-    this.intercepters.push(intercepter)
-  }
+  // static addIntercepter(intercepter: TRequestIntercepter) {
+  //   this.intercepters.push(intercepter)
+  // }
 }

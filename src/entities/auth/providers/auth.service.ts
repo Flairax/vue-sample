@@ -43,7 +43,7 @@ export class AuthService extends AHttpRequest<ILogin, TJwtTokens> {
       method: `POST`,
       url: [`auth`, `login`],
       schema: JWT_TOKENS_SCHEMA,
-      payload: credentials
+      body: credentials
     })
   }
 
@@ -59,7 +59,7 @@ export class AuthService extends AHttpRequest<ILogin, TJwtTokens> {
         router.push({ path: preRedirect })
         LS.remove(`PRE_AUTH_REDIRECT_ROUTE`)
       } else {
-        router.push({ name: `users` })
+        router.push({ name: `home` })
       }
     })
   }
@@ -94,7 +94,7 @@ export class SignupRequest extends AHttpRequest<ISignup, TJwtTokens> {
       method: `POST`,
       url: [`auth`, `signup`],
       schema: JWT_TOKENS_SCHEMA,
-      payload: data
+      body: data
     })
   }
 
@@ -114,7 +114,7 @@ class RefreshRequest extends AHttpRequest<string, TJwtTokens> {
       method: `POST`,
       url: [`auth`, `refresh`],
       schema: JWT_TOKENS_SCHEMA,
-      payload: token
+      body: token
     })
   }
 
@@ -134,7 +134,7 @@ class LogoutRequest extends AHttpRequest<string, boolean> {
       method: `POST`,
       url: [`auth`, `logout`],
       schema: z.boolean(),
-      payload: token
+      body: token
     })
   }
 

@@ -1,6 +1,6 @@
-import { AHttpRequest } from '../request.http'
+import { type TRequestIntercepter  } from '../request.http'
 
-AHttpRequest.addIntercepter((request, next) => {
+export const contentTypeIntercepter: TRequestIntercepter = (request, next) => {
   request.headers['Content-type'] = 'application/json'
   return next(request)
-})
+}

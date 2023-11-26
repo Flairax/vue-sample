@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { TableView, stringControl, type ITableProps } from '@/components';
+import { TableView, stringControl, type ITableProps, HttpState } from '@/components';
 import { StringInput, type IStringInputProps } from '@/components/inputs';
-import { useUserCrudStore, type IUser } from '@/entities';
+import { AHttpRequest } from '@/utils';
 import { computed, ref, onMounted } from 'vue';
+import { z } from 'zod';
 
 
 interface IHero {
@@ -15,9 +16,32 @@ interface IHeroAttrs {
   power: number;
 }
 
-const crud = useUserCrudStore();
 // const users = useUserListStore();
 
+
+const USER_SCHEMA = z.object({
+  id: z.string(),
+  avatar: z.string(),
+  createdAt: z.string(),
+  name: z.string(),
+})
+
+type TUser = z.infer<typeof USER_SCHEMA>;
+class UsersRequest extends AHttpRequest<void, readonly TUser[]> {
+  protected createRequest(payload: void): Promise<readonly TUser[]> {
+      return this.createFetchRequest({
+        method: `GET`,
+        schema: z.array( USER_SCHEMA),
+        url: [`https://6563b638ceac41c0761d0db4.mockapi.io/api/v1/users`]
+      })
+  }
+}
+
+function loadUsers() {
+  userRequest.load();
+}
+
+const userRequest = new UsersRequest();
 
 const name: IStringInputProps = {
   control: stringControl(),
@@ -50,16 +74,6 @@ function toggle() {
   show.value = !show.value
 }
 
-function add() {
-  console.log(
-    name.control.data, age.control.data
-  )
-  crud.add({
-    name: name.control.data.value,
-    age: +age.control.data.value
-  })
-}
-
 const inputRef = ref<HTMLInputElement>();
 
 onMounted(() => {
@@ -73,6 +87,14 @@ onMounted(() => {
 <template>
   <input type="text"
          ref="inputRef">
+
+  <button @click="loadUsers">loadUsers</button>
+
+  <HttpState :request="userRequest">
+    <template v-slot="{data}">
+      <div>{{ JSON.stringify(data) }}</div>
+    </template>
+  </HttpState>
 
   <!-- <button @click="users.load">Load</button>
   <div>
