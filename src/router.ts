@@ -1,41 +1,21 @@
 import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router'
 // import type { IUserDetailsRouteProps } from './root/app/pages/UserDetailsView.vue'
 import { authGuard } from './entities/auth'
+import { appRoute } from './root/app/app.router';
+
+export const ERootRoutes = {
+    auth: Symbol(),
+    home: Symbol(),
+    user: Symbol(),
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/',
-      name: 'app',
-      component: () => import('./root/app/pages/HomeView.vue'),
-      meta: {
-        authRequired: true
-      },
-      children: [
-        {
-          path: '/',
-          name: 'home',
-          component: () => import('./root/app/pages/HomeView.vue')
-        },
-        // {
-        //   path: '/users',
-        //   name: 'users',
-        //   component: () => import('./root/app/pages/UserListView.vue')
-        // },
-        // {
-        //   path: '/users/:id',
-        //   name: 'user',
-        //   props: (route): IUserDetailsRouteProps => ({
-        //     id: +route.params.id ?? 1
-        //   }),
-        //   component: () => import('./root/app/pages/UserDetailsView.vue')
-        // }
-      ]
-    },
+    appRoute,
     {
       path: '/auth',
-      name: 'auth',
+      name: ERootRoutes.auth,
       component: () => import('./root/auth/RootAuth.vue'),
     }
   ]

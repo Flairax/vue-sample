@@ -1,0 +1,23 @@
+:root {
+    --transition: 0.4s;
+
+    --cl-black-2: hsl(0, 0%, 7%);
+    --cl-black-1: hsl(0, 0%, 0%);
+    --cl-white-1: white;
+    --cl-accent: hsl(47, 92%, 53%);
+    --cl-text-secondary: #ffffffb3;
+    --cl-icon-black: rgba(31, 31, 31, 0.4);
+
+    --gap-block: 2rem;
+    --gap-content: 1rem;
+    --poster-width: 70px;
+    --poster-height: 100px;
+
+    --header-height-mobile: 50px;
+    --header-height-desktop: 60px;
+    --header-height: var(--header-height-desktop);
+
+    --footer-height: 100px;
+
+    --sidebar-width: 300px;
+}

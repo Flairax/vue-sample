@@ -1,8 +1,5 @@
 import { ZodType } from 'zod'
 import { ARequest } from './request.core'
-import { apiIntercepter } from './intercepters/api.intercepter'
-import { contentTypeIntercepter } from './intercepters/contentType.intercepter'
-import { intercepters } from './intercepters'
 
 // ====================================
 //              Model
@@ -34,8 +31,7 @@ export abstract class AHttpRequest<I, O> extends ARequest<I, O> {
   //            Internal
   // ------------------------------------
   protected async createFetchRequest(request: IRequestCtx<O>): Promise<O> {
-    const irs = intercepters
-    // const irs = AHttpRequest.intercepters
+    const irs = AHttpRequest.intercepters
     if (!irs.length) return this.sendRequest(request);
 
     console.log(request);
@@ -73,7 +69,6 @@ export abstract class AHttpRequest<I, O> extends ARequest<I, O> {
 
   private async sendRequest(request: IRequestCtx<O>) {
     const url = request.url + this.getParamsString(request)
-    console.log(request, intercepters);
 
     const response = await fetch(url, {
       method: request.method,
@@ -119,12 +114,7 @@ export abstract class AHttpRequest<I, O> extends ARequest<I, O> {
   // ------------------------------------
   //              Static
   // ------------------------------------
-  // private static intercepters: TRequestIntercepter[] = [
-  //   apiIntercepter,
-  //   contentTypeIntercepter
-  // ]
+  /* Init while attaching plugin */
+  static intercepters: TRequestIntercepter[] = []
 
-  // static addIntercepter(intercepter: TRequestIntercepter) {
-  //   this.intercepters.push(intercepter)
-  // }
 }

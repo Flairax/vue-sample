@@ -1,5 +1,4 @@
 import { reactive, ref, type Ref } from 'vue'
-import { environment } from '@/utils/environments/environment'
 
 // // ====================================
 // //              Model
@@ -59,7 +58,7 @@ export type TRequestState<T> =
 export type TRequestMock<I, O> = (payload: I) => Promise<O>
 
 export interface IReadonlyHttpRequest<T> {
-  state: Ref<TRequestState<T>>;
+  state: Ref<TRequestState<T>>
 }
 // ====================================
 //              Class
@@ -79,7 +78,7 @@ export abstract class ARequest<I, O> {
   //              Api
   // ------------------------------------
   public async load(payload: I): Promise<O> {
-    if (environment.mock && this.loadMock) {
+    if (ARequest.mocks && this.loadMock) {
       return this.loadMock().then((mock) => {
         return this.wrapRequest(mock(payload))
       })
@@ -111,7 +110,7 @@ export abstract class ARequest<I, O> {
 
     this._delayId = setTimeout(() => {
       this.setDelayState()
-    }, environment.requestDelay)
+    }, ARequest.delayMs)
 
     const requestId = ++this._requestId
 
@@ -186,6 +185,12 @@ export abstract class ARequest<I, O> {
     clearTimeout(this._delayId)
     delete this._delayId
   }
+  // ------------------------------------
+  //            Static
+  // ------------------------------------
+  /* Init while attaching plugin */
+  static mocks: boolean
+  static delayMs: number
 }
 
 const INITIAL_STATE: IInitialState = Object.freeze({

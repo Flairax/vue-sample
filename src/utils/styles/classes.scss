@@ -1,0 +1,28 @@
+.app-icon {
+    width: var(--icon-size);
+    height: var(--icon-size);
+}
+
+.app-text-s {
+    color: var(--cl-text-secondary);
+    font-size: 1.4rem;
+}
+
+.app-svg-interactable {
+    cursor: pointer;
+    transition: var(--transition);
+
+    &:hover {
+        fill: var(--cl-accent);
+    }
+}
+
+
+.app-svg-interactable-child {
+    cursor: pointer;
+    transition: var(--transition);
+
+    &:hover .app-svg-child {
+        fill: var(--cl-accent);
+    }
+}

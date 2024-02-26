@@ -5,12 +5,10 @@ import Application from './root/app/layout/AppContent.vue';
 </script>
 
 <template>
-    <Application></Application>
-asdasdasdas
-
-    <!-- <RouterView></RouterView> -->
+    <RouterView></RouterView>
 </template>
 
-<style scoped>
-   
+<style lang="scss">
+@import "./utils/styles/main.scss";
+
 </style>

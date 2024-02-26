@@ -15,11 +15,8 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@formkit/icons": "^0.19.3",
-    "@formkit/pro": "^0.115.2",
-    "@formkit/themes": "^0.19.3",
-    "@formkit/vue": "^0.19.3",
     "pinia": "^2.1.6",
+    "video.js": "^8.6.1",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4",
     "vuesax-alpha": "^0.2.0-beta.61",
@@ -42,6 +39,7 @@
     "jsdom": "^22.1.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.0.0",
+    "sass": "^1.69.5",
     "start-server-and-test": "^2.0.0",
     "typescript": "~5.1.6",
     "vite": "^4.4.9",

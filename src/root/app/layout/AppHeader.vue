@@ -1,37 +1,32 @@
 <script setup lang="ts">
-interface IRoute {
-    path: string;
-    title: string;
-}
+import AppSearch from './AppSearch.vue';
 
-const routes: IRoute[] = [
-    {
-        path: `/`,
-        title: `Home`
-    },
-    {
-        path: `/users`,
-        title: `Users`
-    },
-]
 
 </script>
 
 <template>
     <header>
-        <nav class="links">
-            <RouterLink v-for="{ path, title } of routes"
-                        :key="path"
-                        :to="path"
-                        class="link">{{ title }}</RouterLink>
-        </nav>
+        <div class="logo">AHML</div>
+        <div class="menu">
+            <div class="app-icon"></div>
+            <div>Menu</div>
+        </div>
+        <AppSearch class="search" />
+        <div class="subscription">SBCR</div>
+        <div class="watchlist"></div>
+        <div class="signin">Sigin</div>
+        <div class="localization">EN</div>
     </header>
 </template>
 
 <style scoped>
 header {
-    height: 50px;
-    border-bottom: 1px solid black;
+    height: var(--header-height);
+    background-color: var(--cl-black-2);
+    display: flex;
+    align-items: center;
+    gap: var(--gap-block);
+    padding: 0 calc(var(--gap-block) * 2);
 }
 
 nav {
@@ -39,5 +34,15 @@ nav {
     height: 100%;
     align-items: center;
     gap: 20px;
+}
+
+.menu {
+    display: flex;
+}
+
+.menu-icon {}
+
+.search {
+    flex-grow: 1;
 }
 </style>

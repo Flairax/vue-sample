@@ -1,0 +1,45 @@
+@use "vars";
+@use "classes";
+@use "scrollbar";
+@use "@modules/video.js/dist/video-js.css";
+
+:root {
+  font-size: 62.5%; /* Converts font size to 10px basis.  */
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  font-size: 1.6rem; /* 1.6rem = 16px; 2rem = 20px */
+  height: 100%;
+  background-color: var(--cl-black-1);
+  color: var(--cl-white-1);
+  font-family: "Roboto";
+}
+
+h3 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+ul, ol {
+  padding: 0;
+  list-style: none;
+  margin: 0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}

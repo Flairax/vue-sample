@@ -12,3 +12,4 @@ export * from './other/id'
 // export * from './firebase/auth'
 // export * from './firebase/firestore'
 
+export { requestPlugin } from './plugin'

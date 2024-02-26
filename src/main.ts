@@ -1,12 +1,12 @@
-import './utils/css/main.css'
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import RootContainer from './App.vue'
 import router from './router'
-import { FORMKIT_CONFIG, FORMKIT_PLUGIN } from '@/utils/plugins/formkit'
 import { AuthService } from './entities/auth'
+import { environment, requestPlugin } from './utils'
+import { apiIntercepter } from './utils/intercepters/api.intercepter'
+import { contentTypeIntercepter } from './utils/intercepters/contentType.intercepter'
 
 const app = createApp(RootContainer)
 
@@ -23,7 +23,12 @@ const app = createApp(RootContainer)
 // ------------------------------------
 //              Plugins
 // ------------------------------------
-app.use(FORMKIT_PLUGIN, FORMKIT_CONFIG)
+app.use(requestPlugin, {
+  mocks: environment.mock,
+  delayMs: environment.requestDelay,
+  interceptes: [apiIntercepter, contentTypeIntercepter]
+})
+
 app.use(createPinia())
 app.use(router)
 // ------------------------------------
