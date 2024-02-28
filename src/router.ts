@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory, type RouteLocationNormalized } from 'vue-router'
 // import type { IUserDetailsRouteProps } from './root/app/pages/UserDetailsView.vue'
-import { authGuard } from './entities/auth'
+import { authGuard } from './entities'
 import { appRoute } from './root/app/app.router';
 
 export const ERootRoutes = {
-    auth: Symbol(),
+    auth: `auth`,
     home: Symbol(),
     user: Symbol(),
 }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router';
-import Application from './root/app/layout/AppContent.vue';
 
 </script>
 

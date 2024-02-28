@@ -1,6 +1,7 @@
-import { type TRequestIntercepter  } from '../request/request.http'
+import { createHttpIntercepter } from '..'
 
-export const contentTypeIntercepter: TRequestIntercepter = (request, next) => {
-  request.headers['Content-type'] = 'application/json'
-  return next(request)
-}
+export const contentTypeIntercepter = createHttpIntercepter((config, next) => {
+  config.headers['Content-type'] = 'application/json'
+  console.log(config)
+  return next(config)
+})

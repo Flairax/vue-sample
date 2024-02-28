@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { AuthService } from '@/entities/auth'
+import { AUTH } from '@/entities'
 import router from '../../router';
 
 const email = ref(`mock@gmail.com`);
 const password = ref(`11111111`);
 const passwordRepeat = ref(password);
-const authService = AuthService.inject();
 
 
 async function signup() {
-    authService.signup({
+    AUTH.signup({
         email: email.value,
         password: password.value,
         passwordRepeat: passwordRepeat.value

@@ -1,8 +1,8 @@
-import { environment } from '..'
-import { type TRequestIntercepter } from '../request/request.http'
+import { createHttpIntercepter, environment } from '..'
 
+export const apiIntercepter = createHttpIntercepter((config, next) => {
+  config.url.unshift(environment.api)
+  console.log(config)
 
-export const apiIntercepter: TRequestIntercepter = (request, next) => {
-  // request.url.unshift(environment.api)
-  return next(request)
-}
+  return next(config)
+})

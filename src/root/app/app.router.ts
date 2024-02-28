@@ -1,7 +1,7 @@
 import type { RouteRecordRaw } from 'vue-router'
 
 export const EAppRoutes = {
-  home: Symbol()
+  home: `home`
 }
 
 export const appRoute: RouteRecordRaw = {

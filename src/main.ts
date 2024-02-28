@@ -1,9 +1,9 @@
-import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { createApp } from 'vue'
 
 import RootContainer from './App.vue'
+import { authIntercepter } from './entities'
 import router from './router'
-import { AuthService } from './entities/auth'
 import { environment, requestPlugin } from './utils'
 import { apiIntercepter } from './utils/intercepters/api.intercepter'
 import { contentTypeIntercepter } from './utils/intercepters/contentType.intercepter'
@@ -13,8 +13,8 @@ const app = createApp(RootContainer)
 // ------------------------------------
 //              Providers
 // ------------------------------------
-;[AuthService].forEach((provider) => {
-  app.provide(provider.name, new provider())
+;[].forEach((provider) => {
+  // app.provide(provider.name, provider.root)
 })
 // ------------------------------------
 //              Components
@@ -26,7 +26,7 @@ const app = createApp(RootContainer)
 app.use(requestPlugin, {
   mocks: environment.mock,
   delayMs: environment.requestDelay,
-  interceptes: [apiIntercepter, contentTypeIntercepter]
+  intercepters: [apiIntercepter, contentTypeIntercepter, authIntercepter]
 })
 
 app.use(createPinia())

@@ -17,6 +17,8 @@ export class LocalStorage {
     if (item !== null && item[0] === `{`) return JSON.parse(item)
     return item
   }
+
+  public static readonly root = new LocalStorage()
 }
 
 export const LS = new LocalStorage()
