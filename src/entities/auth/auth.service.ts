@@ -19,16 +19,16 @@ export class AuthService extends ARequestReflector<TJwtTokens> {
   //              Api
   // ------------------------------------
   public signup(data: ISignup) {
-    return this.reflectState(new SignupRequest(), data)
+    return this.reflectRequest(new SignupRequest(), data)
   }
 
   public login(credentials: ILogin) {
-    return this.reflectState(new LoginRequest(), credentials)
+    return this.reflectRequest(new LoginRequest(), credentials)
   }
 
   public refresh() {
     if (!this.state.value.ready) throw new Error()
-    return this.reflectState(new RefreshRequest(), this.state.value.data.refresh)
+    return this.reflectRequest(new RefreshRequest(), this.state.value.data.refresh)
   }
 
   public clear() {
@@ -62,7 +62,7 @@ export class AuthService extends ARequestReflector<TJwtTokens> {
   private checkExisting() {
     const tokens = LS.get(`JWT_TOKENS`)
     if (!tokens) return
-    this.setReady(tokens)
+    this.setData(tokens)
   }
 }
 

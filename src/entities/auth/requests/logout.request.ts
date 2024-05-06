@@ -2,14 +2,16 @@ import { AFetchRequest } from '@/utils'
 import { z } from 'zod'
 
 export class LogoutRequest extends AFetchRequest<string, boolean> {
+  constructor() {
+    super(z.boolean())
+  }
   // ------------------------------------
   //              Internal
   // ------------------------------------
   public load(token: string) {
-    return this.configureRequest({
+    return this.sendRequest({
       method: `POST`,
       url: [`auth`, `logout`],
-      schema: z.boolean(),
       body: token
     })
   }

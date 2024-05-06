@@ -1,43 +1,63 @@
-import { shallowRef, watch, type Ref } from 'vue'
-import type { IReadonlyRequest, IRequest } from './request.core'
-import { INITIAL_STATE, RequestState, type TRequestState } from './request.state'
+import { watch, type Ref } from 'vue'
+import { RequestState, type IReadonlyRequest, type TRequestState, type IRequest } from '..'
 
-export abstract class ARequestReflector<O> implements IReadonlyRequest<O> {
-  private _state: Ref<TRequestState<O>> = shallowRef(INITIAL_STATE)
-  private _abort?: () => void
+export class ARequestReflector<T> implements IReadonlyRequest<T> {
+  private _state = new RequestState<T>()
+  private _stopReflect?: () => void
+  private _request?: IRequest<unknown, unknown>
 
-  public get state(): Readonly<Ref<TRequestState<O>>> {
-    return this._state
-  }
-  // ------------------------------------
-  //              Public
-  // ------------------------------------
-  public clear(): void {
-    if (this._abort) this._abort()
-    this._state.value = INITIAL_STATE
-  }
-  // ------------------------------------
-  //              Protected
-  // ------------------------------------
-  protected async reflectState<I>(request: IRequest<I, O>, config: I): Promise<O> {
-    if (this._abort) this._abort()
-
-    const stopHandle = watch(request.state, (s) => (this._state.value = s))
-    this._abort = () => {
-      stopHandle()
-      request.clear()
-      delete this._abort
-    }
-
-    return request.load(config).finally(() => {
-      stopHandle()
-      delete this._abort
-    })
+  public get state(): Readonly<Ref<TRequestState<T>>> {
+    return this._state.current
   }
 
-  protected setReady(value: O) {
-    const state = new RequestState<O>()
-    state.setReady(value)
-    this._state.value = state.current.value
+  protected async reflectRequest<C>(request: IRequest<C, T>, config: C): Promise<T>
+  protected async reflectRequest<C, R>(
+    request: IRequest<C, R>,
+    config: C,
+    unwrap: (response: R) => T
+  ): Promise<T>
+  protected async reflectRequest<C, R>(
+    request: IRequest<C, R>,
+    config: C,
+    unwrap: (response: R) => T = (v) => v as any
+  ): Promise<T> {
+    this.releaseReflect()
+    this._request = request
+    this._stopReflect = watch(request.state, (s) => this.reflectState(s, unwrap))
+    return request
+      .load(config)
+      .then(unwrap)
+      .finally(() => this.releaseReflect())
   }
+
+  private reflectState<D>(state: TRequestState<D>, unwrap: (response: D) => T) {
+    if (!state.ready) return this._state.reflect(state)
+    const value = unwrap(state.data)
+    this._state.setReady(value)
+  }
+
+  protected clear() {
+    if (this.state.value.initial) return
+    this.releaseReflect()
+    this._state.setInitial()
+  }
+
+  protected setData(value: T) {
+    this.releaseReflect()
+    this._state.setReady(value)
+  }
+
+  private releaseReflect() {
+    if (!this._stopReflect || !this._request) return
+    this._stopReflect()
+    this._request.clear()
+    delete this._stopReflect
+    delete this._request
+  }
+
+  private setCache(value: T) {
+    if (!this.getResponseId) return
+    OBJECT_CACHE.set(this._schema as any, this.getResponseId(value))
+  }
+
 }

@@ -48,9 +48,10 @@ export interface IErrorState {
 export class RequestError extends Error {
   constructor(
     readonly status: number,
-    reason: string
+    message: string
   ) {
-    super(reason)
+    super(message)
+    this.name = this.constructor.name
   }
 }
 
@@ -104,6 +105,14 @@ export class RequestState<T> {
       ready: false,
       error
     })
+  }
+
+  public reflect(newState: TRequestState<T>) {
+    this.setState(newState)
+  }
+
+  public updateData() {
+    
   }
   // ------------------------------------
   //              Private

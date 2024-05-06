@@ -1,12 +1,10 @@
-import type { ZodType } from 'zod'
 
 export type THttpMethod = `GET` | `POST` | `PUT` | `DELETE`
 
-export interface IHttpConfig<I, O> {
+export interface IHttpConfig<T> {
   url: string[]
   method: THttpMethod
-  schema: ZodType<O>
-  body: I
+  body: T
   params?: Record<string, string>
   headers?: Record<string, string>
 }

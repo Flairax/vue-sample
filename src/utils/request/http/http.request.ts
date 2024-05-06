@@ -1,25 +1,27 @@
-import type { THttpIntercepter } from '..'
+import { type THttpIntercepter } from '..'
 import { ARequest } from '../core/request.core'
 import type { IHttpConfig } from './http.model'
 
-export abstract class AHttpRequest<I, O, C extends IHttpConfig<I, O>> extends ARequest<C, O> {
+export abstract class AHttpRequest<I, O, C extends IHttpConfig<I>> extends ARequest<C, O> {
   // ------------------------------------
   //              Protected
   // ------------------------------------
-  protected configureRequest(config: C): Promise<O> {
-    return super.configureRequest(config, AHttpRequest.intercepters)
+  protected sendRequest(request: C): Promise<O> {
+    return super.sendRequest(request, AHttpRequest.intercepters)
   }
 
-  protected copyConfig({ url, method, schema, params, body, headers, ...rest }: C): C {
+  protected copyConfig(request: C): C {
     return {
-      url: [...url],
-      method,
-      params: { ...params },
-      headers: { ...headers },
-      body: body !== undefined ? JSON.parse(JSON.stringify(body)) : undefined,
-      schema,
-      ...rest
+      ...request,
+      headers: request.headers ?? {},
+      params: request.params ?? {}
     } as C
+  }
+
+  protected getParamsString({ params }: C) {
+    const entries = Object.entries(params ?? {})
+    if (!entries.length) return ``
+    return `?` + entries.map(([key, value]) => `${key}=${value}`).join(`&`)
   }
   // ------------------------------------
   //              Static

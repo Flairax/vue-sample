@@ -13,12 +13,11 @@ export class ProfileService extends ARequestReflector<TUserProfile> {
   // ------------------------------------
   private watchTokenReady() {
     watch(
-      AUTH.inject().state,
+      AUTH.state,
       ({ ready, initial }) => {
         if (initial) return this.clear()
         if (!ready) return
-        this.reflectState(new ProfileRequest(), null)
-        console.log(this)
+        this.reflectRequest(new ProfileRequest(), null)
       },
       { immediate: true }
     )
@@ -36,14 +35,16 @@ export class ProfileService extends ARequestReflector<TUserProfile> {
 }
 
 export class ProfileRequest extends AFetchRequest<null, TUserProfile> {
+  constructor() {
+    super(USER_PROFILE_SCHEMA)
+  }
   // ------------------------------------
   //              Internal
   // ------------------------------------
   public load() {
-    return this.configureRequest({
+    return this.sendRequest({
       method: `GET`,
       url: [`auth`, `profile`],
-      schema: USER_PROFILE_SCHEMA,
       body: null
     })
   }
